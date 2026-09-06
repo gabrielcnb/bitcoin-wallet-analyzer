@@ -1,6 +1,9 @@
-# bitcoin-wallet-analyzer
+# BTC Wallet Audit
 
 CLI tool that fetches the full transaction history of a Bitcoin address and calculates the EUR value at the time of each transaction, plus the current wallet value.
+
+![Python](https://img.shields.io/badge/Python-3-blue?logo=python&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green)
 
 ## Features
 
