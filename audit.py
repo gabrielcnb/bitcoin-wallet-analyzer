@@ -11,7 +11,7 @@ def get_wallet_address():
     return address
 
 def get_current_bitcoin_price():
-    """Obtém o preço atual do Bitcoin em EUR."""
+    """Fetch the current Bitcoin price in EUR."""
     try:
         url = "https://api.blockchain.com/v3/exchange/tickers/BTC-EUR"
         response = requests.get(url)
@@ -19,7 +19,7 @@ def get_current_bitcoin_price():
         data = response.json()
         return float(data['last_trade_price'])
     except Exception as e:
-        raise Exception(f"Não foi possível obter o preço atual do Bitcoin: {str(e)}")
+        raise Exception(f"Could not fetch the current Bitcoin price: {str(e)}")
 
 def get_wallet_balance(address):
     try:
@@ -29,10 +29,10 @@ def get_wallet_balance(address):
         data = response.json()
         balance_satoshi = data.get('final_balance')
         if balance_satoshi is None:
-            raise Exception("Não foi possível obter o saldo da carteira")
+            raise Exception("Could not fetch the wallet balance")
         return balance_satoshi / 100000000
     except Exception as e:
-        raise Exception(f"Erro ao obter saldo da carteira: {str(e)}")
+        raise Exception(f"Error fetching wallet balance: {str(e)}")
 
 def calculate_transaction_fee(tx):
     total_input = sum(input_tx.get('prev_out', {}).get('value', 0) 
@@ -53,10 +53,10 @@ def get_historical_price(timestamp):
         return None
 
 def get_transaction_data(address):
-    print(f"Consultando transações para o endereço: {address}")
+    print(f"Fetching transactions for address: {address}")
     try:
         url = f"https://blockchain.info/rawaddr/{address}"
-        print("Conectando à API da Blockchain.info...")
+        print("Connecting to Blockchain.info API...")
         response = requests.get(url)
         response.raise_for_status()
         data = response.json()
@@ -79,7 +79,7 @@ def get_transaction_data(address):
                 else:
                     current_price = get_current_bitcoin_price()
                     historical_value = abs(amount_btc * current_price)
-                    print(f"Aviso: Usando preço atual para a transação de {date}")
+                    print(f"Warning: using current price for the transaction on {date}")
                 time.sleep(1.5)
                 transactions.append({
                     "date": date,
@@ -90,32 +90,32 @@ def get_transaction_data(address):
                 })
         return transactions
     except Exception as e:
-        raise Exception(f"Erro ao obter dados das transações: {str(e)}")
+        raise Exception(f"Error fetching transaction data: {str(e)}")
 
 def process_transactions(transactions):
-    print("\nHistórico de Transações:")
+    print("\nTransaction History:")
     print("-" * 80)
     for transaction in transactions:
-        print(f"Data: {transaction['date']}")
+        print(f"Date: {transaction['date']}")
         print(f"Hash: {transaction['hash']}")
-        print(f"Quantidade BTC: {transaction['amount_btc']:.8f}")
-        print(f"Valor na época: {transaction['value_eur_at_time']:.2f} EUR")
-        print(f"Taxa: {transaction['fee_btc']:.8f} BTC")
+        print(f"Amount BTC: {transaction['amount_btc']:.8f}")
+        print(f"Value at time: {transaction['value_eur_at_time']:.2f} EUR")
+        print(f"Fee: {transaction['fee_btc']:.8f} BTC")
         print("-" * 80)
     try:
         wallet_balance = get_wallet_balance(get_wallet_address())
         current_price = get_current_bitcoin_price()
         current_value = wallet_balance * current_price
-        print("\nValores Atuais:")
-        print(f"Saldo BTC: {wallet_balance:.8f}")
-        print(f"Preço atual do Bitcoin: {current_price:.2f} EUR")
-        print(f"Valor atual da carteira: {current_value:.2f} EUR")
+        print("\nCurrent Values:")
+        print(f"BTC Balance: {wallet_balance:.8f}")
+        print(f"Current Bitcoin price: {current_price:.2f} EUR")
+        print(f"Current wallet value: {current_value:.2f} EUR")
     except Exception as e:
-        print(f"\nErro ao processar saldo atual: {str(e)}")
+        print(f"\nError processing current balance: {str(e)}")
 
 try:
     wallet_address = get_wallet_address()
     transactions = get_transaction_data(wallet_address)
     process_transactions(transactions)
 except Exception as e:
-    print(f"\nErro na execução do programa: {str(e)}")
+    print(f"\nProgram execution error: {str(e)}")

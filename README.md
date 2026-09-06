@@ -44,7 +44,7 @@ set BITCOIN_ADDRESS=bc1q...
 ## Usage
 
 ```bash
-python retorno.py
+python audit.py
 ```
 
 Example output:
@@ -71,6 +71,6 @@ Current wallet value: 145.80 EUR
 ## File Structure
 
 ```
-carteira bitcoin retorno/
-└── retorno.py    # Single-file CLI application
+btc-wallet-audit/
+└── audit.py     # Single-file CLI application
 ```
